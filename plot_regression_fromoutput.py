@@ -33,6 +33,7 @@ proc_dict = {
            "HWWelenuqq": "fj_H_WW_elenuqq",
            "HWWmunuqq": "fj_H_WW_munuqq",
            "HWWtaunuqq":  "fj_H_WW_taunuqq",
+           "Hbb": "fj_H_bb"
     }
 }
 

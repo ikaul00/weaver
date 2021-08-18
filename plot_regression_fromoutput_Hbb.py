@@ -66,7 +66,7 @@ if __name__ == "__main__":
         hist_ratio = hist.Hist("ratio",
                                hist.Cat("process", "Process"),
                                hist.Bin("outputratio", r"Regressed mass/Target mass", 60, 0, 2),
-                               hist.Bin("msoftdropratio", r"Softdrop Mass/Target mass" ),
+                               hist.Bin("msoftdropratio", r"Softdrop Mass/Target mass", 60, 0, 2),
         )
         
         for proc,label in proc_dict[p].items():

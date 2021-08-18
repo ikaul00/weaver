@@ -66,6 +66,7 @@ if __name__ == "__main__":
         hist_ratio = hist.Hist("ratio",
                                hist.Cat("process", "Process"),
                                hist.Bin("outputratio", r"Regressed mass/Target mass", 60, 0, 2),
+                               hist.Bin("msoftdropratio", r"Softdrop Mass/Target mass" ),
         )
         
         for proc,label in proc_dict[p].items():
@@ -84,6 +85,7 @@ if __name__ == "__main__":
             )
             hist_ratio.fill(process=proc,
                         outputratio = output["output"][mask_proc]/output["target_mass"][mask_proc],
+                        msoftdropratio = output["fj_msoftdrop"][mask_proc]/output["target_mass"][mask_proc]
             )
             
         # make mass plots
@@ -120,7 +122,7 @@ if __name__ == "__main__":
             fig.tight_layout()
             fig.savefig("%s/comparemass_%s_mh125.pdf"%(args.odir,p))
             
-        """
+        
         # plot ratio
         ratio_to_plot = ["outputratio"]
         fig, axs = plt.subplots(1,len(ratio_to_plot), figsize=(len(ratio_to_plot)*8,8))
@@ -132,4 +134,4 @@ if __name__ == "__main__":
             axs_1.set_ylabel('Jets')
         fig.tight_layout()
         fig.savefig("%s/ratio_%s.pdf"%(args.odir,p))
-        """
+        

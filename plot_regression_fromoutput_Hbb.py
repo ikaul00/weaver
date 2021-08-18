@@ -124,7 +124,7 @@ if __name__ == "__main__":
             
         
         # plot ratio
-        ratio_to_plot = ["outputratio"]
+        ratio_to_plot = ["outputratio", "msoftdropratio"]
         fig, axs = plt.subplots(1,len(ratio_to_plot), figsize=(len(ratio_to_plot)*8,8))
         for i,m in enumerate(ratio_to_plot):
             axs_1 = axs

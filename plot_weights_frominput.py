@@ -424,7 +424,8 @@ if __name__ == "__main__":
     # define categories to plot
     cats = {
         #'sig': sig_cats,
-        'sig': ["fj_isHWW_elenuqq_merged", "fj_isHWW_munuqq_merged"] # for the signals only config
+        #'sig': ["fj_isHWW_elenuqq_merged", "fj_isHWW_munuqq_merged"] # for the signals only config
+        'sig': ["fj_H_bb"]
         }
     #cats['qcd'] =  qcd_cats
     cats['qcd'] = ["fj_QCD_label"] # uncomment for when using one single label

@@ -15,7 +15,7 @@ branches = ["fj_pt","fj_genjetmsd",
             ]
 
 qcd_cats = ["fj_isQCDb","fj_isQCDbb","fj_isQCDc","fj_isQCDcc","fj_isQCDlep","fj_isQCDothers"]
-sig_cats = ["fj_H_WW_4q","fj_H_WW_elenuqq","fj_H_WW_munuqq","fj_H_WW_taunuqq"]
+sig_cats = ["fj_H_bb", "fj_H_WW_4q","fj_H_WW_elenuqq","fj_H_WW_munuqq","fj_H_WW_taunuqq"]
 
 branches += qcd_cats
 branches += sig_cats
@@ -59,11 +59,11 @@ if __name__ == "__main__":
         genresmass_range = [-99] + list(range(0,200,5))
         hist_mass = hist.Hist("mass",
                               hist.Cat("process", "Process"),
-                              hist.Bin("genmsd", r"fj GEN msoftdrop [GeV]", 60, 0, 260),
-                              hist.Bin("targetmass", r"Target mass [GeV]", 70, 0, 260),
+                              hist.Bin("genmsd", r"fj GEN msoftdrop [GeV]", 70, 0, 460),
+                              hist.Bin("targetmass", r"Target mass [GeV]", 70, 0, 460),
                               hist.Bin("genresmass", r"GEN mass [GeV]", genresmass_range),
-                              hist.Bin("outputmass", r"Regressed mass", 60, 0, 260),
-                              hist.Bin("msd", r"fj msoftdrop [GeV]", 60, 0, 260),
+                              hist.Bin("outputmass", r"Regressed mass", 60, 0, 460),
+                              hist.Bin("msd", r"fj msoftdrop [GeV]", 60, 0, 460),
         )
         
         hist_ratio = hist.Hist("ratio",
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         
         for proc,label in proc_dict[p].items():
             # fill histogram
-            mask_proc = ((output[label]==1) & (output["fj_genjetmsd"]<260))
+            mask_proc = (output[label]==1)
             # add mass H 125 for signal
             if "HWW" in label:
                 mask_proc = mask_proc & (output["fj_genRes_mass"]==125)
@@ -109,6 +109,21 @@ if __name__ == "__main__":
         fig.tight_layout()
         fig.savefig("%s/comparemass_%s.pdf"%(args.odir,p))
 
+        # for mh125
+        if p=="sig":
+            fig, axs = plt.subplots(1,1, figsize=(8,8))
+            omass = hist_mass.sum(*[ax for ax in hist_mass.axes() if ax.name not in {'outputmass','genresmass'}])
+            smass = hist_mass.sum(*[ax for ax in hist_mass.axes() if ax.name not in {'msd','genresmass'}])
+            omass = omass.integrate('genresmass',slice(125,130))
+            smass = smass.integrate('genresmass',slice(125,130))
+            print(omass,smass)
+            hist.plot1d(omass,ax=axs)
+            hist.plot1d(smass,ax=axs,clear=False)
+            axs.legend(['Regressed','Softdrop'])
+            fig.tight_layout()
+            fig.savefig("%s/comparemass_%s_mh125.pdf"%(args.odir,p))
+            
+        
         # plot ratio
         ratio_to_plot = ["outputratio"]
         fig, axs = plt.subplots(1,len(ratio_to_plot), figsize=(len(ratio_to_plot)*8,8))

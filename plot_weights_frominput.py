@@ -303,12 +303,10 @@ if __name__ == "__main__":
             
         # define selection
         if args.regression:
-            mask_train = "(fj_pt>200) & (fj_pt<2500) & (fj_genjetmsd<260) &"\
-                "( ( ( (fj_isQCDb==1) | (fj_isQCDbb==1) | (fj_isQCDc==1) | (fj_isQCDcc==1) | (fj_isQCDlep==1) | (fj_isQCDothers==1) ) & "\
-                "(fj_genRes_mass<0) ) | "\
-                "(fj_isTop == 1) | (fj_isToplep==1) | "\
-                "( ( (fj_H_WW_4q==1) | (fj_H_WW_elenuqq==1) | (fj_H_WW_munuqq==1) | (fj_H_WW_taunuqq==1) ) & "\
-                "(fj_maxdR_HWW_daus<2.0) & (fj_nProngs>1) & (fj_genRes_mass>0) ) )"
+            mask_train = "(fj_pt>200) & (fj_pt<2500) & (fj_genjetmsd<260) & \
+    ( ( ( (fj_isQCDb==1) |  (fj_isQCDbb==1) | (fj_isQCDc==1) |  (fj_isQCDcc==1) | \
+     (fj_isQCDlep == 1) | (fj_isQCDothers == 1) ) & (fj_genRes_mass<0) ) | \
+     (( (fj_H_bb==1) & (fj_genRes_mass>0) )) )"
             mask_test = mask_train
         else:
             # CMS: here I changed msoftdrop cut to 260!
@@ -328,7 +326,7 @@ if __name__ == "__main__":
     # define branches:
     branches = ["fj_pt","fj_msoftdrop","fj_genjetmsd","fj_genRes_mass","fj_maxdR_HWW_daus","fj_nProngs"]
     branches += ["fj_isTop","fj_isToplep"]
-    branches += ["fj_H_WW_4q","fj_H_WW_elenuqq","fj_H_WW_munuqq","fj_H_WW_taunuqq"]
+    branches += ["fj_H_bb", "fj_H_WW_4q","fj_H_WW_elenuqq","fj_H_WW_munuqq","fj_H_WW_taunuqq"]
     branches += ["fj_isQCDb","fj_isQCDbb","fj_isQCDc","fj_isQCDcc","fj_isQCDlep","fj_isQCDothers"]
 
     qcd_cats = ["fj_isQCDb","fj_isQCDbb","fj_isQCDc","fj_isQCDcc","fj_isQCDlep","fj_isQCDothers"]
@@ -360,21 +358,20 @@ if __name__ == "__main__":
     # build new variables
     table["target_mass"] = np.maximum(1, np.where(table["fj_genRes_mass"]>0, table["fj_genRes_mass"], table["fj_genjetmsd"]))
 
-    if not args.regression:
-        table["fj_isTop_merged"] = (table["fj_isTop"]==1) & (table["fj_nProngs"]==3)
-        table["fj_isTop_semimerged"] = (table["fj_isTop"]==1) & (table["fj_nProngs"]==2)
-        table["fj_isToplep_merged"] = (table["fj_isToplep"]==1) & (table["fj_nProngs"]>=2)
-        table["fj_isHWW_elenuqq_merged"] = (table["fj_H_WW_elenuqq"]==1) & (table["fj_nProngs"]==4)
-        table["fj_isHWW_elenuqq_semimerged"] = (table["fj_H_WW_elenuqq"]==1) & ((table["fj_nProngs"]==3) | (table["fj_nProngs"]==2))
-        table["fj_isHWW_munuqq_merged"] = (table["fj_H_WW_munuqq"]==1) & (table["fj_nProngs"]==4)
-        table["fj_isHWW_munuqq_semimerged"] = (table["fj_H_WW_munuqq"]==1) & ((table["fj_nProngs"]==3) | (table["fj_nProngs"]==2))
-        table["fj_isHWW_taunuqq_merged"] = (table["fj_H_WW_taunuqq"] ==1) & (table["fj_nProngs"]==4)
-        table["fj_isHWW_taunuqq_semimerged"] = (table["fj_H_WW_taunuqq"] ==1) & ((table["fj_nProngs"]==3) | (table["fj_nProngs"]==2))
-        table["fj_H_WW_4q_3q"] = (table["fj_H_WW_4q"]==1) & (table["fj_nProngs"]==3)
-        table["fj_H_WW_4q_4q"] = (table["fj_H_WW_4q"]==1) & (table["fj_nProngs"]==4)
-
-        table["fj_QCD_label"] = (table["fj_isQCDb"]==1) | (table["fj_isQCDbb"]==1) | (table["fj_isQCDc"]==1) | (table["fj_isQCDcc"]==1) | (table["fj_isQCDlep"]==1) | (table["fj_isQCDothers"]==1)
-        table["fj_Top_label"] = (table["fj_isTop"]==1) | (table["fj_isToplep"]==1)
+    #if not args.regression:
+    table["fj_isTop_merged"] = (table["fj_isTop"]==1) & (table["fj_nProngs"]==3)
+    table["fj_isTop_semimerged"] = (table["fj_isTop"]==1) & (table["fj_nProngs"]==2)
+    table["fj_isToplep_merged"] = (table["fj_isToplep"]==1) & (table["fj_nProngs"]>=2)
+    table["fj_isHWW_elenuqq_merged"] = (table["fj_H_WW_elenuqq"]==1) & (table["fj_nProngs"]==4)
+    table["fj_isHWW_elenuqq_semimerged"] = (table["fj_H_WW_elenuqq"]==1) & ((table["fj_nProngs"]==3) | (table["fj_nProngs"]==2))
+    table["fj_isHWW_munuqq_merged"] = (table["fj_H_WW_munuqq"]==1) & (table["fj_nProngs"]==4)
+    table["fj_isHWW_munuqq_semimerged"] = (table["fj_H_WW_munuqq"]==1) & ((table["fj_nProngs"]==3) | (table["fj_nProngs"]==2))
+    table["fj_isHWW_taunuqq_merged"] = (table["fj_H_WW_taunuqq"] ==1) & (table["fj_nProngs"]==4)
+    table["fj_isHWW_taunuqq_semimerged"] = (table["fj_H_WW_taunuqq"] ==1) & ((table["fj_nProngs"]==3) | (table["fj_nProngs"]==2))
+    table["fj_H_WW_4q_3q"] = (table["fj_H_WW_4q"]==1) & (table["fj_nProngs"]==3)
+    table["fj_H_WW_4q_4q"] = (table["fj_H_WW_4q"]==1) & (table["fj_nProngs"]==4)
+    table["fj_QCD_label"] = (table["fj_isQCDb"]==1) | (table["fj_isQCDbb"]==1) | (table["fj_isQCDc"]==1) | (table["fj_isQCDcc"]==1) | (table["fj_isQCDlep"]==1) | (table["fj_isQCDothers"]==1)
+    table["fj_Top_label"] = (table["fj_isTop"]==1) | (table["fj_isToplep"]==1)
         
     if not args.config:
         print('define reweighting')

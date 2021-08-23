@@ -343,7 +343,7 @@ if __name__ == "__main__":
     # define events
     if args.regression:
         events = uproot.iterate([os.path.join(args.data_dir, 'train/QCD*/*.root:Events'),
-                                 os.path.join(args.data_dir, 'train/Grav*/*.root:Events')], branches, mask)
+                                 os.path.join(args.data_dir, 'train/BulkGravitonToHHTo4Q*/*.root:Events')], branches, mask)
     else:
         events = uproot.iterate([os.path.join(args.data_dir, 'train/QCD*/*.root:Events'),
                                  os.path.join(args.data_dir, 'train/Grav*/*.root:Events'),

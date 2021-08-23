@@ -59,12 +59,14 @@ def make_weights(table,reweight_branches,reweight_bins,reweight_classes,reweight
     if reweight_method == 'flat':
         for label, classwgt in zip(reweight_classes, class_weights):
             hist = result[label]
+            print(label)
+            print(hist)
             threshold_ = np.median(hist[hist > 0]) * 0.01
             nonzero_vals = hist[hist > threshold_]
-            min_val, med_val = np.min(nonzero_vals), np.median(hist)  # not really used
+            #min_val, med_val = np.min(nonzero_vals), np.median(hist)  # not really used
             ref_val = np.percentile(nonzero_vals, reweight_threshold)
-            print('label:%s, median=%f, min=%f, ref=%f, ref/min=%f' %
-                  (label, med_val, min_val, ref_val, ref_val / min_val))
+            #print('label:%s, median=%f, min=%f, ref=%f, ref/min=%f' %
+            #      (label, med_val, min_val, ref_val, ref_val / min_val))
             # wgt: bins w/ 0 elements will get a weight of 0; bins w/ content<ref_val will get 1
             wgt = np.clip(np.nan_to_num(ref_val / hist, posinf=0), 0, 1)
             result[label] = wgt

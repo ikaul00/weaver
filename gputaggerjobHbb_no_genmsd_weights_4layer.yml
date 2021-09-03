@@ -14,7 +14,7 @@ spec:
         - "/bin/bash"
         - "-c"
         - >
-          git clone https://github.com/ikaul00/weaver && cd weaver && 
+          git clone https://github.com/cmantill/weaver && cd weaver && 
           (python -u train.py
           --data-train '/hwwtaggervol/training/ak15_Jul27/train/QCD*/*.root' '/hwwtaggervol/training/ak15_Jul27/train/BulkGravitonToHHTo4Q*/*.root' 
           --data-config data/ak15_points_pf_sv_mass_regression_Hbb_no_genmsd_weight_4layer.yaml

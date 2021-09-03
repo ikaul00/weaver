@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: weaver-job-ik-QCD
+  name: weaver-job-ik-qcd
   labels:
     app: hwwtagger
 spec:
@@ -16,7 +16,7 @@ spec:
         - >
           git clone https://github.com/cmantill/weaver && cd weaver && 
           (python -u train.py
-          --data-train '/hwwtaggervol/training/ak15_Jul27/train/QCD*/*.root' 
+          --data-train '/hwwtaggervol/training/ak15_Jul27/train/QCD*/*.root'
           --data-config data/ak15_points_pf_sv_mass_regression_QCD.yaml
           --network-config networks/particle_net_pf_sv_mass_regression.py
           --model-prefix /hwwtaggervol/models/v04_regression/4_ak15Jul27_v04_QCD_bsize128_fstep0p02_lr3em3 
@@ -28,7 +28,7 @@ spec:
           --gpu 0,1,2
           --fetch-step 0.02
           --regression-mode
-          | tee /hwwtaggervol/logs/regression_4_ak15_v04_QCD_bsize128_fstep0p02_lr3em3_4q.log &
+          | tee /hwwtaggervol/logs/regression_4_ak15_v04_QCD_bsize128_fstep0p02_lr3em3_QCD.log &
           wait)
         volumeMounts:
         - mountPath: /hwwtaggervol

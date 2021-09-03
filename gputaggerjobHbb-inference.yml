@@ -33,7 +33,7 @@ spec:
             cpu: "4"
             nvidia.com/gpu: "3"
           requests:
-            memory: 70Gi
+            memory: 50Gi
             cpu: "3"
             nvidia.com/gpu: "3"
       volumes:

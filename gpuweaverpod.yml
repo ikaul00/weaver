@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpuweaverpod
+  labels:
+    app: hwwtagger
+spec:
+  containers:
+  - name: container
+    image: gitlab-registry.nrp-nautilus.io/raghsthebest/hww-tagger/weaver
+    command: ["/bin/bash", "-c", "sleep infinity"]
+    resources:
+      limits:
+        memory: 4Gi
+        cpu: "1"
+        nvidia.com/gpu: "1"
+      requests:
+        memory: 4Gi
+        cpu: "1"
+        nvidia.com/gpu: "1"
+        ephemeral-storage: 512Gi
+    volumeMounts:
+    - mountPath: /hwwtaggervol
+      name: hwwtaggervol
+  restartPolicy: Never
+  volumes:
+    - name: hwwtaggervol
+      persistentVolumeClaim:
+        claimName: hwwtaggervol
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: gpu-type
+            operator: In
+            values:
+            - 1080Ti

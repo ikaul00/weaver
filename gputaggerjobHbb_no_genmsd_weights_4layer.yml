@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: weaver-job-ik-qcd-inference
+  name: weaver-job-ik-hbb-no-genmsd-weight-4layer
   labels:
     app: hwwtagger
 spec:
@@ -14,15 +14,21 @@ spec:
         - "/bin/bash"
         - "-c"
         - >
-          git clone https://github.com/cmantill/weaver && cd weaver && 
-          (python train.py --predict 
-          --data-test '/hwwtaggervol/training/ak15_Jul27/test/QCD*/*.root'
-          --data-config data/ak15_points_pf_sv_mass_regression_QCD.yaml
-          --network-config networks/particle_net_pf_sv_mass_regression.py
-          --model-prefix /hwwtaggervol/models/v04_regression/4_ak15Jul27_v04_QCD_bsize128_fstep0p02_lr3em3_epoch-19_state.pt
-          --gpus 0,1,2 --batch-size 128
-          --predict-output /hwwtaggervol/output/4_v04_ak15_regression_QCD_Aug5_ep19.root 
-          --regression-mode &
+          git clone https://github.com/ikaul00/weaver && cd weaver && 
+          (python -u train.py
+          --data-train '/hwwtaggervol/training/ak15_Jul27/train/QCD*/*.root' '/hwwtaggervol/training/ak15_Jul27/train/BulkGravitonToHHTo4Q*/*.root' 
+          --data-config data/ak15_points_pf_sv_mass_regression_Hbb_no_genmsd_weight_4layer.yaml
+          --network-config networks/particle_net_pf_sv_mass_regression_4layer.py
+          --model-prefix /hwwtaggervol/models/v04_regression/4_ak15Jul27_v04_Hbb_no_genmsd_weight_4layer_bsize128_fstep0p02_lr3em3 
+          --num-workers 3 
+          --batch-size 128 
+          --start-lr 3e-3 
+          --num-epochs 20 
+          --optimizer ranger 
+          --gpu 0,1,2
+          --fetch-step 0.02 
+          --regression-mode 
+          | tee /hwwtaggervol/logs/regression_4_ak15_v04_Hbb_no_genmsd_weight_4layer_bsize128_fstep0p02_lr3em3.log &
           wait)
         volumeMounts:
         - mountPath: /hwwtaggervol
@@ -33,7 +39,7 @@ spec:
             cpu: "4"
             nvidia.com/gpu: "3"
           requests:
-            memory: 50Gi
+            memory: 55Gi
             cpu: "3"
             nvidia.com/gpu: "3"
       volumes:
@@ -57,4 +63,5 @@ spec:
                 - 2080Ti
       restartPolicy: Never
   backoffLimit: 0
+
 
